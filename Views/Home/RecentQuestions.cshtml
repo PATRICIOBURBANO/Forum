@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Forum.Models.Question>
+
+@{
+    ViewData["Title"] = "RecentQuestions";
+}
+
+<h1>All Recent Questions Full Page</h1>
+
+    <form asp-action="RecentQuestions" method="post">
+    <select name="sort" asp-items="ViewBag.Sort"></select>
+    <button type="submit">Sort</button>
+    </form>
+     <p>
+        <h5><a asp-action="NewQuestion" class="btn btn-primary">Post a New Question </a></h5>
+    </p>
+    <p>
+        <a  asp-controller="Home" asp-action="Index">Back Main Page</a>
+    </p>
+    <p>
+         <a type="submit" asp-action="AllQuestions" method="post" >Administrator Page</a>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Title of Question
+                </th>
+                <th>
+                    
+                </th>
+                <th>
+                    Date Posted
+                </th>
+                <th>
+                    Answers
+                </th>
+                <th>
+                    User Name
+                </th>
+                <th>
+                   
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                     <td>
+
+                        @Html.DisplayFor(modelItem => item.TitleQuestion)
+                        <a asp-action="NewAnswer" method="post" asp-route-questionId="@item.Id">Answer thisQuestion </a>
+
+                    </td>
+                    <td>
+                    </td>
+                        
+                    <td>
+
+                        @Html.DisplayFor(modelItem => item.DateQuestion)
+                    </td>  
+                     <td>
+                        @Html.DisplayFor(modelItem => item.VoteQuestion)
+                    </td>
+                    
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                     <td>
+                            <a asp-action="DetailsQuestion" method="post" asp-route-questionId="@item.Id">Details</a>      
+                    </td>
+                </tr>
+            }
+        </tbody>
+        
+    </table>
+   
+   
+
+     <p>
+     <a  asp-controller="Home" asp-action="Index">Back on Top</a>
+     </p>

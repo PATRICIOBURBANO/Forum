@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "AllUsers";
+}
+
+@model ICollection<ApplicationUser>
+
+<h1>All Users</h1>
+
+<div> Your user name is @ViewBag.UserName</div>
+@if (Model != null)
+{
+    <ul>
+        @foreach (var u in Model)
+        {
+            <li>
+                @u.Email
+            </li>
+        }
+    </ul>
+}
+
+
+<p>
+    <a asp-controller="Home" asp-action="Index">Back home</a>
+</p>

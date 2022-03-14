@@ -1,0 +1,91 @@
+﻿@using ForumPagination
+@model PaginatedList<Forum.Models.Question>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index Recent Questions Forum</h2>
+
+<p>
+    <a asp-action="NewQuestion">Create a New Question</a>
+</p>
+
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by text: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-primary" /> 
+            <a asp-action="RecentQuestions">Back to Full Page List</a>
+        </p>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title Question          
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Date Posted</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AnswerSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Answers</a>
+            </th>
+            <th>
+                User Name
+            </th>
+            <th>
+                Tag
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TitleQuestion)
+                    <a asp-action="NewAnswer" method="post" asp-route-questionId="@item.Id">Answer thisQuestion </a>
+                    
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateQuestion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VoteQuestion)
+                </td>
+                 <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    <a asp-controller="Home" asp-action="AllQuestionsByTag" method="post" asp-route-questionId="@item.Topic"> @Html.DisplayFor(modelItem => item.Topic)</a>
+                </td>
+                <td>
+                    <a asp-action="DetailsQuestion" method="post" asp-route-questionId="@item.Id">Details</a>  
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-primary @nextDisabled">
+    Next
+</a>

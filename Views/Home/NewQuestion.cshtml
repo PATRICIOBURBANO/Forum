@@ -1,0 +1,51 @@
+﻿@model Forum.Models.Question
+
+@{
+    ViewData["Title"] = "AddNewQuestion";
+}
+
+<h1>Add a New Question</h1>
+<hr />
+<h4>Title</h4>
+ <form asp-action="NewQuestion" method="post">
+ <select name="questionTag" asp-items="ViewBag.TagsQuestion"></select>
+ 
+<div class="row">
+    <div class="col-md-4">
+       
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input name ="questionTitle"type="text" asp-for="TitleQuestion" required ="required"/>
+            </div>
+            <h4>Body Text</h4>
+            <div>
+                <textarea name="questionBody" asp-for="BodyQuestion" class="form-control">
+                </textarea>
+
+                <span asp-validation-for="BodyQuestion" class="text-danger"></span>
+            </div>
+            <div>
+          
+
+            </div>
+            <div>
+               
+            </div>
+            <div class="form-group">
+                
+                
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+      
+    </div>
+</div>
+  </form>
+  <p>
+     <a  asp-controller="Home" asp-action="Index">Back home</a>
+     </p>
+
+
+
+     
+
+    

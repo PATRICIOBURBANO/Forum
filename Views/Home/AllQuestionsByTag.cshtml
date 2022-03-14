@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Forum.Models.Question>
+
+@{
+    ViewData["Title"] = "QuestionsByTag";
+}
+
+<h1>All Questions By Tag</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TitleQuestion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BodyQuestion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+              
+            </th> 
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TitleQuestion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BodyQuestion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                 
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-controller="Home" asp-action="Index">Back home</a>
+</p>

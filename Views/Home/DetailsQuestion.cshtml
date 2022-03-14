@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Forum.Models.Question>
+
+@{
+    ViewData["Title"] = "DetailsQuestion";
+
+}
+
+@foreach (var a in Model)
+{
+
+
+    <h5>Title</h5>
+    <p>
+        @a.TitleQuestion
+    </p>
+    <h4>Question </h4>
+    <p>
+        @a.BodyQuestion
+    </p>
+    <p>
+        <a asp-controller="Home" asp-action="NewAnswer" method="post">Answer this Question</a>
+    </p>
+    <p>
+        <a asp-controller="Home" asp-action="AllQuestionsByTag" method="post">See related questions</a>
+    </p>
+
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Description Answer
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    User
+                </th>
+                <th>
+                    Votes
+                </th>
+                <th>
+                    Most correct Answer?
+                </th>
+                <th>
+                    
+                </th>
+                <th>
+                    Vote
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in a.Answers)
+            {
+                <tr>
+                    <td>
+                        @item.BodyAnswer
+                    </td>
+                    <td>
+                        @item.DateAnswer
+                    </td>
+                    <td>
+                        @item.UserName
+                    </td>
+                    <td>
+                        @item.VoteAnswer
+                    </td>
+                    <td>
+                        @if(@item.IsItMostCorrect)
+                        {
+                            <button type="submit" asp-action="" method="post" asp-route-questionId="@item.Id">👍</button>
+                        }
+                        
+                    </td>
+                    <td>
+                       
+                    </td>
+                    <td>
+                        <button type="submit" asp-action="" method="post" asp-route-questionId="@item.QuestionId">👍</button>
+                        <button type="submit" asp-action="" method="post" asp-route-questionId="@item.QuestionId">👎</button>
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+}
+<p>
+    <a asp-controller="Home" asp-action="Index">Back home</a>
+</p>
