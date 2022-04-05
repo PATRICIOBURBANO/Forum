@@ -1,4 +1,7 @@
-﻿namespace Forum.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+
+namespace Forum.Models
 {
     public class Answer
     {
@@ -8,6 +11,7 @@
         public string BodyAnswer { get; set; } = null!;
         public int QuestionId { get; set; }
         public string? UserId { get; set; }
+        //public int AnswerId { get; set; }
         public int VoteAnswer { get; set; }
         public bool IsItMostCorrect { get; set; } = false;
         public virtual ApplicationUser? User { get; set; }
@@ -15,7 +19,8 @@
 
         public Answer()
         {
-            Answers = new List<Answer>();   
+            Answers = new List<Answer>(); 
+            //User = new ApplicationUser();
         }
 
     }

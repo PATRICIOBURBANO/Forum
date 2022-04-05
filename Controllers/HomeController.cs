@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using PagedList;
 using ForumPagination;
 
 namespace Forum.Controllers
@@ -14,6 +13,7 @@ namespace Forum.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        
         private readonly ILogger<HomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -35,12 +35,12 @@ namespace Forum.Controllers
             string currentFilter,
             string searchString,
             int? pageNumber)
-                {
+        {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-            ViewData["AnswerSortParm"] = sortOrder == "Answer" ? "Answer" : "Answer";
-            ViewData["UserSortParm"] = sortOrder == "User" ? "User" : "User";
+            ViewData["AnswerSortParm"] = sortOrder == "Answer" ? "Answer_desc" : "Answer";
+
 
             if (searchString != null)
             {
@@ -53,29 +53,28 @@ namespace Forum.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            var questions = from s in _db.Question
-                           select s;
+            var questions = from s in _db.Question.Include(c => c.Answers)
+                            select s;
+
             if (!String.IsNullOrEmpty(searchString))
             {
-                questions = _db.Question.Where(s => s.TitleQuestion.Contains(searchString)|| s.BodyQuestion.Contains(searchString));
+                questions = _db.Question.Include(c => c.Answers).Where(s => s.TitleQuestion.Contains(searchString) || s.BodyQuestion.Contains(searchString));
             }
             switch (sortOrder)
             {
-                case "name_desc":
-                    questions = questions.OrderBy(s => s.TitleQuestion);
-                    break;
                 case "Date":
                     questions = questions.OrderBy(s => s.DateQuestion);
                     break;
                 case "date_desc":
                     questions = questions.OrderByDescending(s => s.DateQuestion);
                     break;
-                case "User":
-                    questions = questions.OrderByDescending(s => s.UserName);
+                case "Answer_desc":
+                    questions = questions.OrderByDescending(s => s.Answers.Count);
                     break;
                 case "Answer":
-                    questions = questions.OrderByDescending(s => s.VoteQuestion);
+                    questions = questions.OrderBy(s => s.Answers.Count);
                     break;
+
                 default:
                     questions = questions.OrderBy(s => s.DateQuestion);
                     break;
@@ -157,7 +156,7 @@ namespace Forum.Controllers
                 return NotFound(ex.Message);
             }
 
-            return RedirectToAction("recentQuestions");
+            return RedirectToAction("Index");
         }
 
         public IActionResult RecentQuestions(string? sort) //int? page)
@@ -189,6 +188,7 @@ namespace Forum.Controllers
 
         public IActionResult NewAnswer(int questionId)
         {
+
             ViewBag.QuestionId = questionId;
             return View();
         }
@@ -213,7 +213,6 @@ namespace Forum.Controllers
                         UserId = user.Id,
                         VoteAnswer = 0,
                         IsItMostCorrect = false,
-
                     };
                     _db.Answer.Add(newAnswer);
                     _db.SaveChanges();
@@ -224,7 +223,7 @@ namespace Forum.Controllers
                 return NotFound(ex.Message);
             }
 
-            return RedirectToAction("recentQuestions");
+            return RedirectToAction("DetailsQuestion", new {questionId = questionId});
         }
 
         [Authorize(Roles = "Admin")]
@@ -233,6 +232,25 @@ namespace Forum.Controllers
             var allQuestions = _db.Question.ToList();
 
             return View(allQuestions);
+        }
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteQuestion(int questionId)
+        {
+            Question questionSelected = _db.Question.First(a => a.Id == questionId);
+            var answers = _db.Answer.ToList();
+            var answersRelated = _db.Answer.Where(a => a.QuestionId == questionId).ToList();
+
+            if (answersRelated != null)
+            {
+                _db.Question.Remove(questionSelected);
+                _db.SaveChanges();
+            }
+            return RedirectToAction("AllQuestions");
+
+
+
+
+            return RedirectToAction("DetailsQuestion", new { questionId = questionId });
         }
 
         public IActionResult DetailsQuestion(int questionId)
@@ -244,19 +262,74 @@ namespace Forum.Controllers
         public IActionResult AllQuestionsByTag(string questionTag)
         {
             var questionsByTag = _db.Question.Where(a => a.Topic == questionTag).ToList();
+
             return View(questionsByTag);
         }
 
         public IActionResult AllUsers()
         {
             string userName = User.Identity.Name;
-            //ViewBag.UserName = userName;
             ApplicationUser userFromDb = _db.Users.First(u => u.UserName == userName);
 
             List<ApplicationUser> users = _db.Users.ToList();
 
             return View(users);
         }
+
+
+        public IActionResult MostCorrectAnswer(int answerId, int questionId)
+        {
+            Answer answerSelected = _db.Answer.First(a => a.Id == answerId);
+
+            if (answerSelected.IsItMostCorrect == true)
+            {
+                answerSelected.IsItMostCorrect = false;
+                _db.SaveChanges();
+
+
+            }
+            else if (_db.Answer.Where(a => a.QuestionId == questionId).Any(b => b.IsItMostCorrect == true))
+            {
+                return RedirectToAction("DetailsQuestion", new { questionId = questionId });
+            }
+            else
+            {
+                answerSelected.IsItMostCorrect = true;
+                _db.SaveChanges();
+            }
+            return RedirectToAction("DetailsQuestion", new { questionId = questionId });
+        }
+
+        public IActionResult GetVoteUp(int answerId, int questionId)
+        {
+
+            Answer answerSelected = _db.Answer.First(a => a.Id == answerId);
+            //Question userToMark = _db.Question.First(a => a.UserId);
+
+            answerSelected.VoteAnswer += 1;
+            //userToMark.Reputation += 5;
+          
+            _db.SaveChanges();
+
+            return RedirectToAction("DetailsQuestion", new { questionId = questionId });
+        }
+
+        public IActionResult GetVoteDown(int answerId, int questionId)
+        {
+
+            Answer answerSelected = _db.Answer.First(a => a.Id == answerId);
+            ApplicationUser userToMark = answerSelected.User;
+
+
+            answerSelected.VoteAnswer -= 1;
+            //userToMark.Reputation -= 5;
+            
+            _db.SaveChanges();
+
+
+            return RedirectToAction("DetailsQuestion", new { questionId = questionId });
+        }
+
 
 
         public IActionResult Privacy()

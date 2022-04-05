@@ -10,6 +10,9 @@
 <p>
     <a asp-action="NewQuestion">Create a New Question</a>
 </p>
+<p>
+    <a asp-action="AllQuestions">Administrator Page</a>
+</p>
 
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
@@ -47,20 +50,21 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.TitleQuestion)
-                    <a asp-action="NewAnswer" method="post" asp-route-questionId="@item.Id">Answer thisQuestion </a>
+                    <a asp-controller="Home" asp-action="NewAnswer" method="post" asp-route-questionId="@item.Id">Answer this Question </a>
+                    
                     
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DateQuestion)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.VoteQuestion)
+                    @Html.DisplayFor(modelItem => item.Answers.Count)
                 </td>
                  <td>
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
                 <td>
-                    <a asp-controller="Home" asp-action="AllQuestionsByTag" method="post" asp-route-questionId="@item.Topic"> @Html.DisplayFor(modelItem => item.Topic)</a>
+                    <a class="btn btn-primary" asp-controller="Home" asp-action="AllQuestionsByTag" method="post" asp-route-questionTag="@item.Topic"> @Html.DisplayFor(modelItem => item.Topic)</a>
                 </td>
                 <td>
                     <a asp-action="DetailsQuestion" method="post" asp-route-questionId="@item.Id">Details</a>  

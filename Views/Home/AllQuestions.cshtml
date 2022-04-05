@@ -46,7 +46,7 @@
                  
                 </td>
                 <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="DeleteQuestion" asp-route-questionId="@item.Id">Delete</a>
                 </td>
             </tr>
         }
@@ -54,5 +54,5 @@
 </table>
 
 <p>
-    <a asp-controller="Home" asp-action="Index">Back home</a>
+    <a asp-controller="Home" asp-action="AllQuestions">Back All Questions</a>
 </p>

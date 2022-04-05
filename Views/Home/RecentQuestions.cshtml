@@ -52,7 +52,7 @@
                      <td>
 
                         @Html.DisplayFor(modelItem => item.TitleQuestion)
-                        <a asp-action="NewAnswer" method="post" asp-route-questionId="@item.Id">Answer thisQuestion </a>
+                        <a asp-action="NewAnswer" asp-controller="Home" method="post" asp-route-questionId="@item.Id">Answer thisQuestion </a>
 
                     </td>
                     <td>
@@ -63,7 +63,7 @@
                         @Html.DisplayFor(modelItem => item.DateQuestion)
                     </td>  
                      <td>
-                        @Html.DisplayFor(modelItem => item.VoteQuestion)
+                        @Html.DisplayFor(modelItem => item.Answers.Count)
                     </td>
                     
                     <td>

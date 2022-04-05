@@ -23,7 +23,6 @@ using (var scope = app.Services.CreateScope())
 
     await SeedData.Initialize(services);
 
-
 }
 
 // Configure the HTTP request pipeline.

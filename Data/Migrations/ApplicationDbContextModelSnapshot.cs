@@ -40,7 +40,7 @@ namespace Forum.Data.Migrations
                     b.Property<DateTime>("DateAnswer")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("IsItMostCorrect")
+                    b.Property<bool>("IsItMostCorrect")
                         .HasColumnType("bit");
 
                     b.Property<int>("QuestionId")

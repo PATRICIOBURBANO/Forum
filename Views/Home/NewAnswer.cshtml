@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "NewAnswer";
 }
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/ckeditor/ckeditor.js"></script>
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 
 <h1>New Answer</h1>
 @ViewBag.QuestionTitle
@@ -16,13 +19,21 @@
             <div class="form-group">
 
                 <label asp-for="BodyAnswer" class="control-label"></label>
-                <textarea name="answerBody" asp-for="BodyAnswer" class="form-control">
+                <textarea id="BodyAnswer" name="answerBody" asp-for="BodyAnswer" class="ckeditor" rows="200">
                 </textarea>
                 <span asp-validation-for="BodyAnswer" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary"  asp-controller="Home" asp-action="Index"/>
+                <input type="submit" value="Create" class="btn btn-primary"/>
+
+            </div>
+            <div>
+                 <script>
+                $(document).ready(function () {
+                    CKEDITOR.replace('#BodyAnswer');
+                });
+            </script>
             </div>
         </form>
     </div>

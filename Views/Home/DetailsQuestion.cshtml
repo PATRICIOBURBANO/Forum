@@ -16,16 +16,12 @@
     <h4>Question </h4>
     <p>
         @a.BodyQuestion
+ 
     </p>
     <p>
         <a asp-controller="Home" asp-action="NewAnswer" method="post">Answer this Question</a>
     </p>
-    <p>
-        <a asp-controller="Home" asp-action="AllQuestionsByTag" method="post">See related questions</a>
-    </p>
-
-
-
+   
     <table class="table">
         <thead>
             <tr>
@@ -44,11 +40,12 @@
                 <th>
                     Most correct Answer?
                 </th>
-                <th>
-                    
-                </th>
+              
                 <th>
                     Vote
+                </th>
+                 <th>
+                    Select most correct
                 </th>
             </tr>
         </thead>
@@ -71,16 +68,17 @@
                     <td>
                         @if(@item.IsItMostCorrect)
                         {
-                            <button type="submit" asp-action="" method="post" asp-route-questionId="@item.Id">👍</button>
+                            <button type="submit" asp-action="" method="post" asp-route-answerId="@item.Id">✌️</button>
                         }
                         
                     </td>
+                   
                     <td>
-                       
+                        <a asp-controller="Home" type="submit" asp-action="GetVoteUp" method="post" asp-route-questionId="@a.Id" asp-route-answerId="@item.Id">👍</a>
+                        <a asp-controller="Home" type="submit" asp-action="GetVoteDown" method="post" asp-route-questionId="@a.Id" asp-route-answerId="@item.Id">👎</a>
                     </td>
                     <td>
-                        <button type="submit" asp-action="" method="post" asp-route-questionId="@item.QuestionId">👍</button>
-                        <button type="submit" asp-action="" method="post" asp-route-questionId="@item.QuestionId">👎</button>
+                        <a asp-controller="Home" type="submit" asp-action="MostCorrectAnswer" method="post" asp-route-questionId="@a.Id" asp-route-answerId="@item.Id" >✌️</a>
                     </td>
                 </tr>
             }

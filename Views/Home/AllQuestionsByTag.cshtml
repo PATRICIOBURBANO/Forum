@@ -11,16 +11,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TitleQuestion)
+                Title
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BodyQuestion)
+                Question
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserName)
+                User Name
             </th>
             <th>
-              
+                Tag
             </th> 
             <th>
             </th>
@@ -40,11 +40,9 @@
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
                 <td>
-                 
+                   @Html.DisplayFor(modelItem => item.Topic)
                 </td>
-                <td>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+              
             </tr>
         }
     </tbody>

@@ -30,7 +30,6 @@ namespace Forum.Controllers
             return View();
         }
 
-
         public IActionResult AddTag()
         {
             ViewBag.Tags = new SelectList(_db.Tag.ToList(), "Id", "Name");
@@ -41,7 +40,7 @@ namespace Forum.Controllers
         public async Task<IActionResult> AddTag(int tagId)
         {
             ApplicationUser user = await _userManager.FindByNameAsync(User.Identity.Name);
-           
+
             Tag tag = _db.Tag.First(u => u.Id == tagId);
 
             UserTag newUserTag = new UserTag { Tag = tag, TagId = tag.Id, User = user, UserId = user.Id };
